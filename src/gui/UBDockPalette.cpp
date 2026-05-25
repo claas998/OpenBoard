@@ -65,6 +65,7 @@ UBDockPalette::UBDockPalette(eUBDockPaletteType paletteType, QWidget *parent, co
 , mCurrentTab(0)
 , mPaletteType(paletteType)
 , mTabPalette(new UBTabDockPalette(this, parent))
+, mAdditionalLeftOffset(0)
 {
     setObjectName(name);
 
@@ -160,6 +161,15 @@ void UBDockPalette::setOrientation(eUBDockOrientation orientation)
     }
 }
 
+void UBDockPalette::setAdditionalLeftOffset(int offset)
+{
+    if (mAdditionalLeftOffset == offset)
+        return;
+
+    mAdditionalLeftOffset = offset;
+    onResizeRequest();
+}
+
 /**
  * \brief Handle the resize event
  * @param event as the resize event
@@ -185,6 +195,9 @@ void UBDockPalette::resizeEvent(QResizeEvent *event)
     case eUBDockOrientation_Top:
         // Not supported yet
     case eUBDockOrientation_Left:
+        origin.setX(mAdditionalLeftOffset);
+        origin.setY(0);
+        break;
     default:
         origin.setX(0);
         origin.setY(0);
@@ -505,7 +518,7 @@ void UBDockPalette::onAllDownloadsFinished()
 
 void UBDockPalette::moveTabs()
 {
-    int x = width();
+    int x = this->x() + width();
     if (mOrientation == eUBDockOrientation_Right)
     {
         if (parentWidget())

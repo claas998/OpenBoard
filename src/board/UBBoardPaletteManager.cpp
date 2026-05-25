@@ -120,6 +120,7 @@ UBBoardPaletteManager::~UBBoardPaletteManager()
 void UBBoardPaletteManager::initPalettesPosAtStartup()
 {
     mStylusPalette->initPosition();
+    updateLeftDockPaletteOffset();
 }
 
 void UBBoardPaletteManager::setupLayout()
@@ -501,6 +502,7 @@ void UBBoardPaletteManager::containerResized()
         mStylusPalette->move(userLeft, userTop);
         mStylusPalette->adjustSizeAndPosition();
         mStylusPalette->initPosition();
+        updateLeftDockPaletteOffset();
     }
 
     if(mZoomPalette)
@@ -569,6 +571,7 @@ void UBBoardPaletteManager::backgroundPaletteClosed()
 void UBBoardPaletteManager::toggleStylusPalette(bool checked)
 {
     mStylusPalette->setVisible(checked);
+    updateLeftDockPaletteOffset();
 }
 
 
@@ -963,6 +966,8 @@ void UBBoardPaletteManager::changeStylusPaletteOrientation(QVariant var)
 
     connect(mStylusPalette, SIGNAL(stylusToolDoubleClicked(int)), UBApplication::boardController, SLOT(stylusToolDoubleClicked(int)));
     mStylusPalette->setVisible(bVisible); // always show stylus palette at startup
+    mStylusPalette->initPosition();
+    updateLeftDockPaletteOffset();
 }
 
 
@@ -990,4 +995,28 @@ void UBBoardPaletteManager::stopDownloads()
         mpDownloadWidget->setVisibleState(false);
         mRightPalette->removeTab(mpDownloadWidget);
     }
+}
+
+int UBBoardPaletteManager::leftDockPaletteOffset() const
+{
+    if (!mStylusPalette)
+        return 0;
+
+    if (!mStylusPalette->isVisible())
+        return 0;
+
+    if (!UBSettings::settings()->appToolBarOrientationVertical->get().toBool())
+        return 0;
+
+    constexpr int gap = 0; // optional z. B. 4, wenn du etwas Abstand willst
+
+    return mStylusPalette->geometry().right() + 1 + gap;
+}
+
+void UBBoardPaletteManager::updateLeftDockPaletteOffset()
+{
+    if (!mLeftPalette)
+        return;
+
+    mLeftPalette->setAdditionalLeftOffset(leftDockPaletteOffset());
 }
