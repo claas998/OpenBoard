@@ -1008,9 +1008,7 @@ int UBBoardPaletteManager::leftDockPaletteOffset() const
     if (!UBSettings::settings()->appToolBarOrientationVertical->get().toBool())
         return 0;
 
-    constexpr int gap = 0; // optional z. B. 4, wenn du etwas Abstand willst
-
-    return mStylusPalette->geometry().right() + 1 + gap;
+    return mStylusPalette->geometry().right() + 1;
 }
 
 void UBBoardPaletteManager::updateLeftDockPaletteOffset()
