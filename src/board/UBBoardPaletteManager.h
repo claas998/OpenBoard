@@ -102,6 +102,8 @@ class UBBoardPaletteManager : public QObject
         void connectPalettes();
         void positionFreeDisplayPalette();
         void setupDockPaletteWidgets();
+        int leftDockPaletteOffset() const;
+        void updateLeftDockPaletteOffset();
 
         QWidget* mContainer;
         UBBoardController *mBoardControler;
