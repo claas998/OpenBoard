@@ -143,7 +143,6 @@ public:
     void setTabFlotable(bool newFlotable) {mTabPalette->mFlotable = newFlotable;}
     int getAdditionalVOffset() const {return mTabPalette->mVerticalOffset;}
     void setAdditionalVOffset(int newOffset) {mTabPalette->mVerticalOffset = newOffset;}
-    void setAdditionalLeftOffset(int offset);
 
     eUBDockPaletteType paletteType(){return mPaletteType;}
 
@@ -218,7 +217,6 @@ private:
 private:
     eUBDockPaletteType mPaletteType;
     UBTabDockPalette *mTabPalette;
-    int mAdditionalLeftOffset;
 };
 
 #endif // UBDOCKPALETTE_H

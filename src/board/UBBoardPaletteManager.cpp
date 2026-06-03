@@ -119,8 +119,7 @@ UBBoardPaletteManager::~UBBoardPaletteManager()
 
 void UBBoardPaletteManager::initPalettesPosAtStartup()
 {
-    mStylusPalette->initPosition();
-    updateLeftDockPaletteOffset();
+    updateStylusPalettePosition();
 }
 
 void UBBoardPaletteManager::setupLayout()
@@ -484,6 +483,12 @@ void UBBoardPaletteManager::connectPalettes()
         }
     }
 
+    if(mLeftPalette)
+    {
+        connect(mLeftPalette, SIGNAL(pageSelectionChangedRequired()),
+                this, SLOT(updateStylusPalettePosition()));
+    }
+
 }
 
 
@@ -500,9 +505,7 @@ void UBBoardPaletteManager::containerResized()
     if(mStylusPalette)
     {
         mStylusPalette->move(userLeft, userTop);
-        mStylusPalette->adjustSizeAndPosition();
-        mStylusPalette->initPosition();
-        updateLeftDockPaletteOffset();
+        updateStylusPalettePosition();
     }
 
     if(mZoomPalette)
@@ -571,7 +574,7 @@ void UBBoardPaletteManager::backgroundPaletteClosed()
 void UBBoardPaletteManager::toggleStylusPalette(bool checked)
 {
     mStylusPalette->setVisible(checked);
-    updateLeftDockPaletteOffset();
+    updateStylusPalettePosition();
 }
 
 
@@ -669,6 +672,7 @@ void UBBoardPaletteManager::changeMode(eUBDockPaletteWidgetMode newMode, bool is
 
                 mLeftPalette->setVisible(leftPaletteVisible);
                 mRightPalette->setVisible(rightPaletteVisible);
+                updateStylusPalettePosition();
 #ifdef Q_OS_WIN
                 if (rightPaletteVisible)
                     mRightPalette->setAdditionalVOffset(0);
@@ -966,10 +970,41 @@ void UBBoardPaletteManager::changeStylusPaletteOrientation(QVariant var)
 
     connect(mStylusPalette, SIGNAL(stylusToolDoubleClicked(int)), UBApplication::boardController, SLOT(stylusToolDoubleClicked(int)));
     mStylusPalette->setVisible(bVisible); // always show stylus palette at startup
-    mStylusPalette->initPosition();
-    updateLeftDockPaletteOffset();
+    updateStylusPalettePosition();
 }
 
+int UBBoardPaletteManager::verticalStylusPaletteLeftOffset() const
+{
+    if (!mStylusPalette || !mLeftPalette)
+        return 0;
+
+    if(!mStylusPalette->isVisible())
+        return 0;
+
+    if(!mLeftPalette->isVisible())
+        return 0;
+
+    if(!UBSettings::settings()->appToolBarOrientationVertical->get().toBool())
+        return 0;
+
+    int offset = mLeftPalette->x() + mLeftPalette->width();
+
+    const QRect tabRect = mLeftPalette->getTabPaletteRect();
+
+    if(!tabRect.isNull())
+        offset = qMax(offset, tabRect.x() + tabRect.width());
+
+    return offset;
+}
+
+void UBBoardPaletteManager::updateStylusPalettePosition()
+{
+    if (!mStylusPalette)
+        return;
+
+    mStylusPalette->adjustSizeAndPosition();
+    mStylusPalette->initPosition(verticalStylusPaletteLeftOffset());
+}
 
 void UBBoardPaletteManager::refreshPalettes()
 {
@@ -995,26 +1030,4 @@ void UBBoardPaletteManager::stopDownloads()
         mpDownloadWidget->setVisibleState(false);
         mRightPalette->removeTab(mpDownloadWidget);
     }
-}
-
-int UBBoardPaletteManager::leftDockPaletteOffset() const
-{
-    if (!mStylusPalette)
-        return 0;
-
-    if (!mStylusPalette->isVisible())
-        return 0;
-
-    if (!UBSettings::settings()->appToolBarOrientationVertical->get().toBool())
-        return 0;
-
-    return mStylusPalette->geometry().right() + 1;
-}
-
-void UBBoardPaletteManager::updateLeftDockPaletteOffset()
-{
-    if (!mLeftPalette)
-        return;
-
-    mLeftPalette->setAdditionalLeftOffset(leftDockPaletteOffset());
 }
