@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>مرحباً بك في <bdi>OpenBoard</bdi></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" />
+  <script src="../../js/theme-loader.js"></script>
+</head>
+<body>
+  <header class="page-header" role="banner">
+    <div class="container logo-title">
+      <h1 class="title">مرحباً بك في <bdi>OpenBoard</bdi></h1>
+      <img id="logo-small" src="../../assets/hint1/openboard-main-logo.png" alt="Logo OpenBoard" />
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main">
+
+
+    <p class="lead">
+      إليك بعض النصائح والإرشادات التي تساعدك على التعرّف إلى <bdi>OpenBoard</bdi>.
+    </p>
+
+    <p>
+      <bdi>OpenBoard</bdi> هو سبورة تفاعلية صُممت من قبل المعلمين ولأجلهم.
+     ويوفر <strong>أربعة أوضاع متكاملة</strong> للاستخدام داخل الصف.
+    </p>
+
+    <section aria-labelledby="modes-title" class="modes">
+      <h2 id="modes-title" class="h2">أوضاع </bdi>OpenBoard</bdi> الأربعة</h2>
+      <ul class="modes-grid" role="list">
+        <li class="mode-card">
+          <a class="mode-card-link" href="../../index.html?lang=en&hint=2" target="_top" data-hint="2">
+            <h3 class="mode-title">وضع السبورة<img class="mode-icon" src="../../assets/common/board.png" alt="" aria-hidden="true"/></h3>
+            <p class="mode-text">قلب </bdi>OpenBoard</bdi> النابض: اكتب وارسم وأضف الملاحظات حرك العناصر على مساحة عمل غير محدودة.</p>
+          </a>
+        </li>
+        <li class="mode-card">
+          <a class="mode-card-link" href="../../index.html?lang=en&hint=3" target="_top" data-hint="3">
+            <h3 class="mode-title">وضع سطح المكتب<img class="mode-icon" src="../../assets/common/display.png" alt="" aria-hidden="true"/></h3>
+            <p class="mode-text">اعرض سطح المكتب لجهازك مع إبقاء أدوات التعليق والتوضيح في متناول اليد.</p>
+          </a>
+        </li>
+        <li class="mode-card">
+          <a class="mode-card-link" href="../../index.html?lang=en&hint=4" target="_top" data-hint="4">
+            <h3 class="mode-title">وضع المستندات<img class="mode-icon" src="../../assets/common/documents.png" alt="" aria-hidden="true"/></h3>
+            <p class="mode-text">نظم صفحاتك، وقم باستيراد الوسائط، وحضّر تسلسلات تعليمية.</p>
+          </a>
+        </li>
+        <li class="mode-card">
+          <a class="mode-card-link" href="../../index.html?lang=en&hint=6" target="_top" data-hint="6">
+            <h3 class="mode-title">وضع الويب<img class="mode-icon" src="../../assets/common/web.png" alt="" aria-hidden="true"/></h3>
+            <p class="mode-text">تصفح الإنترنت مباشرةً داخل <bdi>OpenBoard</bdi> واحفظ المحتوى المفيد.</p>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="start">
+      <p>لنبدأ بأول الأوضاع وأهمها: <strong>وضع السبورة.</strong>.</p>
+    </section>
+
+    <aside class="tip"> 
+      <img class="tip-icon" src="../../assets/common/tip.png" alt="" />
+      <p>
+        يمكنك إعادة <strong>فتح</strong> هذه النافذة في أي وقت عبر زر
+        «النصائح والإرشادات» الموجود في قائمة <bdi>OpenBoard</bdi>.
+        <img class="inline-icon" src="../../assets/hint1/openboard-menu-icon.png" alt="OpenBoard-menu" width="20" height="20" />.
+      </p>
+    </aside>
+  </main>
+
+  <footer class="page-footer" role="contentinfo">
+  
+  </footer>
+
+  <script>
+    (function () {
+      document.addEventListener("click", function (event) {
+        var link = event.target.closest(".mode-card-link[data-hint]");
+        if (!link) return;
+
+        var hint = parseInt(link.getAttribute("data-hint"), 10);
+        var parentApi = window.parent && window.parent.startupHints;
+
+        if (parentApi && typeof parentApi.goToHint === "function") {
+          event.preventDefault();
+          parentApi.goToHint(hint);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
