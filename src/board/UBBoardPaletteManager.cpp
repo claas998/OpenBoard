@@ -485,7 +485,7 @@ void UBBoardPaletteManager::connectPalettes()
 
     if(mLeftPalette)
     {
-        connect(mLeftPalette, SIGNAL(pageSelectionChangedRequired()),
+        connect(mLeftPalette, SIGNAL(dockPaletteGeometryChanged()),
                 this, SLOT(updateStylusPalettePosition()));
     }
 
@@ -987,12 +987,10 @@ int UBBoardPaletteManager::verticalStylusPaletteLeftOffset() const
     if(!UBSettings::settings()->appToolBarOrientationVertical->get().toBool())
         return 0;
 
+    if(mLeftPalette->width() <=0)
+        return 0;
+
     int offset = mLeftPalette->x() + mLeftPalette->width();
-
-    const QRect tabRect = mLeftPalette->getTabPaletteRect();
-
-    if(!tabRect.isNull())
-        offset = qMax(offset, tabRect.x() + tabRect.width());
 
     return offset;
 }

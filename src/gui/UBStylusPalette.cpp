@@ -104,7 +104,7 @@ void UBStylusPalette::initPosition(int verticalLeftOffset)
     int parentHeight = pParentW->height();
 
     if(UBSettings::settings()->appToolBarOrientationVertical->get().toBool()){
-        int posX = qMax(border(), verticalLeftOffset);
+        int posX = border() + verticalLeftOffset;
         int posY = (parentHeight / 2) - (height() / 2);
         pos.setX(posX);
         pos.setY(posY);
