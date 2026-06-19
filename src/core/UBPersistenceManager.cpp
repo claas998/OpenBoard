@@ -38,6 +38,10 @@
 #include <QModelIndex>
 #include <QtConcurrent>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 #include "adaptors/UBSvgSubsetAdaptor.h"
 #include "adaptors/UBThumbnailAdaptor.h"
 #include "adaptors/UBMetadataDcSubsetAdaptor.h"
@@ -967,8 +971,25 @@ QUuid UBPersistenceManager::copyPage(std::shared_ptr<UBDocumentProxy> source, co
 
 QString UBPersistenceManager::generateUniqueDocumentPath(const QString& baseFolder)
 {
-    QDateTime now = QDateTime::currentDateTime();
-    QString dirName = now.toString("yyyy-MM-dd hh-mm-ss.zzz");
+    QString dirName;
+
+#ifdef Q_OS_WIN
+    // QDateTime::currentDateTime() can silently resolve to UTC on Windows when
+    // Qt/ICU fails to map the system timezone name to an IANA zone (see #1429).
+    // GetLocalTime() reads the OS's wall-clock time directly, bypassing that lookup.
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    dirName = QString("%1-%2-%3 %4-%5-%6.%7")
+        .arg(st.wYear, 4, 10, QChar('0'))
+        .arg(st.wMonth, 2, 10, QChar('0'))
+        .arg(st.wDay, 2, 10, QChar('0'))
+        .arg(st.wHour, 2, 10, QChar('0'))
+        .arg(st.wMinute, 2, 10, QChar('0'))
+        .arg(st.wSecond, 2, 10, QChar('0'))
+        .arg(st.wMilliseconds, 3, 10, QChar('0'));
+#else
+    dirName = QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss.zzz");
+#endif
 
     return baseFolder + QString("/OpenBoard Document %1").arg(dirName);
 }
