@@ -595,7 +595,7 @@ std::shared_ptr<UBDocumentProxy> UBPersistenceManager::createDocument(const QStr
     }
 
     doc->setMetaData(UBSettings::documentVersion, UBSettings::currentFileVersion);
-    QString currentDate =  UBStringUtils::toUtcIsoDateTime(QDateTime::currentDateTime());
+    QString currentDate = UBStringUtils::toUtcIsoDateTime(QDateTime::currentDateTime().toLocalTime());
     doc->setMetaData(UBSettings::documentUpdatedAt,currentDate);
     doc->setMetaData(UBSettings::documentDate,currentDate);
 
