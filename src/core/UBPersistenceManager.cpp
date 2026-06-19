@@ -968,6 +968,7 @@ QUuid UBPersistenceManager::copyPage(std::shared_ptr<UBDocumentProxy> source, co
 QString UBPersistenceManager::generateUniqueDocumentPath(const QString& baseFolder)
 {
     QDateTime now = QDateTime::currentDateTime();
+    now.setTimeSpec(Qt::LocalTime);
     QString dirName = now.toString("yyyy-MM-dd hh-mm-ss.zzz");
 
     return baseFolder + QString("/OpenBoard Document %1").arg(dirName);
